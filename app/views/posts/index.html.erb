@@ -1,0 +1,77 @@
+<% @posts.each do |post| %>
+    <div class="col-md-8 col-md-2 mx-auto">
+        <div class="card-wrap">
+            <div class="card">
+                <div class="card-header align-items-center d-flex">
+                    <%= link_to user_path(post.user), class: "no-text-decoration" do %>
+                        
+                        <!--%= image_tag avatar_url(post.user), class: "post-profile-icon" %-->
+                    <% end %>
+                    <%= link_to user_path(post.user), class: "black-color no-text-decoration",　title: post.user.name do %>
+                        <strong><%= post.user.name %></strong>
+                    <% end %>
+
+                    <!-- 削除 -->
+                    <% if post.user_id == current_user.id %>
+                        <%= link_to 'post#delete', method: :delete, class: "ml-auto mx-0 my-auto" do %>
+                            <div class="delete-post-icon">
+                                削除
+                            </div>
+                        <% end %>
+                    <% end %>
+                </div>
+                <% if post.photos.present? %>
+                    <%= link_to(post_path(post)) do %>
+                        <%= image_tag post.photos.first.image.url, class: "card-img-top" %>
+                    <% end %>
+                <% end %>
+                <div class="card-body">
+                    <div class="row parts">
+                        <%# ==========ここから========== %>
+                        <!-- いいね -->
+                        <div id="like-icon-post-<%= post.id.to_s %>">
+                            <% if post.liked_by(current_user).present? %>
+                            <%= link_to "いいねを取り消す", post_unlike_path(post.id, post.liked_by(current_user)), method: :DELETE, remote: true, class: "loved hide-text" %>
+                            <% else %>
+                            <%= link_to "いいね", post_like_path(post), method: :POST, remote: true, class: "love hide-text" %>
+                            <% end %>
+                        </div>
+                        <%# ========== ここまで修正 ========== %>
+
+                        <!--%= link_to "", "#", class: "comment" %-->
+                    </div>
+                        <%# 不明==========ここから==========不明！！！！ %>
+                    <div id="like-text-post-<%= post.id.to_s %>">
+                        <!--%= render "like_text", { like: post.like } %-->
+                    </div>
+                        <%# ==========ここまで修正========== %>
+
+                    <div>
+                        <span><strong><%= post.user.name %></strong></span>
+                        <%= time_ago_in_words(post.created_at).upcase + "前"%><br>
+                        <span><%= post.caption %></span>
+                        <div class="row parts">
+                            <div class="w-100">
+                              <%= form_with model: [post, @comment] do |f| %>
+                                <%= f.text_area :comment, placeholder: "コメント...", class: "form-control comment-input border-0"  %>
+                                <%= f.submit "投稿", class: "btn-sm btn-primary" %>
+                              <% end %>
+                            </div>
+                          <div class="comment parts">
+                              <% post.comments.each do |comment| %>
+                                <%= link_to user_path(post.user), class: "black-color no-text-decoration",　title: post.user.name do %>
+                                    <strong><%= post.user.name %></strong>
+                                <% end %>
+                                <%= comment.comment %>
+                                <% if post.user_id == current_user.id %>
+                                  <%= link_to 'バイバイ', post_comment_path(post, comment), method: :delete %>
+                                <% end %> <br>                         
+                              <% end %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>

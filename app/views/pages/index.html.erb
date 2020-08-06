@@ -1,0 +1,21 @@
+<% if user_signed_in? %>
+  <div class="row">
+    <div>
+      <%= render template: 'posts/index'%>
+    </div>
+  </div>
+
+<% else %>
+
+	<div class="center jumbotron">
+	    <div class="text-center">
+	      <h1>Instagram</h1>
+	      <h3>みんなでバエよう</h3>
+	      <%= link_to 'ログイン', new_user_session_path %>
+	      <h5>または</h5>
+	      <%= link_to 'メールアドレスで登録', 
+	      		new_user_registration_path, class: 'btn btn-lg btn-primary'%>
+	    </div>
+  </div>
+<% end %>
+
